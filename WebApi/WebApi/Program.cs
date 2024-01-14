@@ -1,5 +1,8 @@
 using Application;
+using Application.Abstractions;
 using Infrastructure;
+using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi
 {
@@ -13,6 +16,11 @@ namespace WebApi
             builder.Services
                 .AddApplication()
                 .AddInfrastructure();
+
+            builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+            var cs = builder.Configuration.GetConnectionString("Default");
+            builder.Services.AddDbContext<PersonDbContext>(opt => opt.UseSqlServer(cs));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
